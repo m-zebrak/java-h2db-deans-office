@@ -2,177 +2,163 @@ package org.example;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
-public class StudentsController {
-    private int index = -1;
+public class StudentsController extends Controller {
     ObservableList<Student> students = FXCollections.observableArrayList();
-
-
-    @FXML
-    private TextField index_number_field;
 
     @FXML
     private TextField name_field;
-
     @FXML
     private TextField surname_field;
-
-    @FXML
-    private TableView<Student> myTable;
-
-    @FXML
-    private TableColumn<Student, Integer> id_col;
-
-    @FXML
-    private TableColumn<Student, Integer> index_number_col;
-
     @FXML
     private TableColumn<Student, String> name_col;
-
     @FXML
     private TableColumn<Student, String> surname_col;
 
 
-
-
-    private ResultSet getAllStudents() {
-        String sql = "SELECT * FROM students;";
-        return QueryExecutor.executeQuery(sql);
-    }
-
-
     private void createStudentsList() {
-        ResultSet rs = getAllStudents();
         students.clear();
-
-        try {
-            while(rs.next()) {
-                Student student = new Student(rs.getInt("id"),
-                                              rs.getInt("index_number"),
-                                              rs.getString("name"),
-                                              rs.getString("surname"));
-                students.add(student);
-            }
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
+        getListOfAllObjectsValues("students")
+                .forEach(arr -> students.add(new Student((String[]) arr)));
     }
 
 
     public void fillTable() {
-        id_col.setCellValueFactory(new PropertyValueFactory<Student, Integer>("id"));
-        index_number_col.setCellValueFactory(new PropertyValueFactory<Student, Integer>("index_number"));
-        name_col.setCellValueFactory(new PropertyValueFactory<Student, String>("name"));
-        surname_col.setCellValueFactory(new PropertyValueFactory<Student, String>("surname"));
+        id_col.setCellValueFactory(new PropertyValueFactory("id"));
+        index_number_col.setCellValueFactory(new PropertyValueFactory("index_number"));
+        name_col.setCellValueFactory(new PropertyValueFactory("name"));
+        surname_col.setCellValueFactory(new PropertyValueFactory("surname"));
 
         myTable.setItems(students);
     }
 
 
-    public int getIndex() {
-        return myTable.getSelectionModel().getSelectedIndex();
+    public boolean validateFields(String index_number, String name, String surname) {
+        boolean passed = true;
+
+        if (!StringUtils.isNumeric(index_number) || Integer.parseInt(index_number) < 1) {
+            index_number_field.setText("Enter Number > 0!");
+            passed = false;
+        }
+
+        if (name.equals("") || name.equals("Enter name!")) {
+            name_field.setText("Enter name!");
+            passed = false;
+        }
+
+        if (surname.equals("") || surname.equals("Enter surname!")) {
+            surname_field.setText("Enter surname!");
+            passed = false;
+        }
+
+        return passed;
     }
 
 
-    public boolean validateForm(String index_number, String name, String surname) {
-        if (!StringUtils.isNumeric(index_number) || Integer.parseInt(index_number) <= 0) {
-            index_number_field.setText("ENTER NUMBER >0");
-            return false;
+    private boolean fieldsUnedited(String index_number, String name, String surname) {
+        if (index_number.equals(index_number_col.getCellData(index).toString()) && name.equals(name_col.getCellData(index)) && surname.equals(surname_col.getCellData(index))) {
+            return true;
         }
 
-        if (name.equals("") || surname.equals("") || name.equals("name") || surname.equals("surname")){
-            return false;
-        }
-
-        return true;
+        return false;
     }
 
 
-    public void getSelected(javafx.scene.input.MouseEvent mouseEvent) {
-        index = getIndex();
-
-        if (index <= -1) return;
+    public void rowSelected() {
+        //sets index of selected row
+        setIndex();
+        //if someone fills up the fields on the left side and then click back on the same row - return and don't update the form
+        if (!setId()) return;
 
         index_number_field.setText(index_number_col.getCellData(index).toString());
-        name_field.setText(name_col.getCellData(index).toString());
-        surname_field.setText(surname_col.getCellData(index).toString());
+        name_field.setText(name_col.getCellData(index));
+        surname_field.setText(surname_col.getCellData(index));
     }
 
 
-    @FXML
     public void initialize() {
         createStudentsList();
         fillTable();
     }
 
 
-
     @FXML
-    public void refreshButton(ActionEvent event) throws IOException {
+    public void refreshButton() {
         initialize();
     }
 
+
     @FXML
-    public void subjectsButton(ActionEvent event) throws IOException {
+    public void subjectsButton() throws IOException {
         App.setRoot("subjects");
     }
 
+
+    /**
+     * This function is called when the add button is pressed. Retrieves data from the fields on the left,
+     * then validates them and sends a query if validations have been passed.
+     */
     @FXML
-    public void addButton(ActionEvent event) throws IOException {
-        String index_number = index_number_field.getText().toString();
-        String name = name_field.getText().toString();
-        String surname = surname_field.getText().toString();
+    public void addButton() {
+        String index_number = index_number_field.getText();
+        String name = name_field.getText();
+        String surname = surname_field.getText();
 
-        if(!validateForm(index_number, name, surname)) return;
+        if (!validateFields(index_number, name, surname)) return;
 
-        String sql = String.format("INSERT INTO students VALUES (null, %s, \"%s\", \"%s\");", index_number, name, surname);
-        QueryExecutor.execute(sql);
+        String sql = String.format("INSERT INTO students VALUES (null, %s, \'%s\', \'%s\');", index_number, name, surname);
+        QueryExecutor.executeUpdate(sql);
         initialize();
     }
 
+
+    /**
+     * This function is called when the edit button is pressed. Retrieves data from the fields on the left only if
+     * a row is selected, then validates them and sends a query if validations have been passed.
+     */
     @FXML
-    public void editButton(ActionEvent event) throws IOException {
-        index = getIndex();
+    public void editButton() {
+        //if no one row is selected
+        if (!setIndex()) return;
 
-        if (index <= -1) return;
-
-        String index_number = index_number_field.getText().toString();
+        String index_number = index_number_field.getText();
         String index_number_old = index_number_col.getCellData(index).toString();
-        String name = name_field.getText().toString();
-        String surname = surname_field.getText().toString();
+        String name = name_field.getText();
+        String surname = surname_field.getText();
 
-        if(!validateForm(index_number, name, surname)) return;
+        if (fieldsUnedited(index_number, name, surname)) return;
+        if (!validateFields(index_number, name, surname)) return;
 
-        String sql = String.format("UPDATE students SET index_number=%s, name=\"%s\", surname=\"%s\" WHERE index_number=%s;",
-                                    index_number, name, surname,index_number_old);
+        String sql = String.format("UPDATE students SET index_number=%s, name=\'%s\', surname=\'%s\' WHERE index_number=%s;",
+                index_number, name, surname, index_number_old);
         System.out.println(sql);
-        QueryExecutor.execute(sql);
+        QueryExecutor.executeUpdate(sql);
         initialize();
     }
 
-    @FXML
-    public void removeButton(ActionEvent event) throws IOException {
-        index = getIndex();
 
-        if (index <= -1) return;
+    /**
+     * This function is called when the remove button is pressed. Retrieves data from the fields on the left only if
+     * a row is selected, then sends a delete query.
+     */
+    @FXML
+    public void removeButton() {
+        if (!setIndex()) return;
 
         String index_number = index_number_col.getCellData(index).toString();
 
-        String sql = String.format("DELETE FROM students WHERE index_number=%s",index_number);
-        QueryExecutor.execute(sql);
+        String sql1 = String.format("DELETE FROM students WHERE index_number=%s", index_number);
+        String sql2 = String.format("DELETE FROM subjects WHERE index_number=%s", index_number);
+
+        QueryExecutor.executeUpdate(sql1);
+        QueryExecutor.executeUpdate(sql2);
         initialize();
     }
-
-
 }

@@ -42,7 +42,7 @@
                         <HBox prefHeight="100.0" prefWidth="200.0">
                            <children>
                               <Region prefHeight="97.0" prefWidth="100.0" />
-                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="index_number">
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="index_number:">
                                  <font>
                                     <Font size="16.0" />
                                  </font>
@@ -50,7 +50,7 @@
                                     <Insets left="5.0" top="15.0" />
                                  </HBox.margin>
                               </Text>
-                              <TextField fx:id="index_number_field" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="150.0" text="index_number">
+                              <TextField fx:id="index_number_field" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="150.0">
                                  <HBox.margin>
                                     <Insets left="20.0" top="10.0" />
                                  </HBox.margin>
@@ -61,7 +61,7 @@
                         <HBox prefHeight="100.0" prefWidth="200.0">
                            <children>
                               <Region prefHeight="97.0" prefWidth="100.0" />
-                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="subject">
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="subject:">
                                  <font>
                                     <Font size="16.0" />
                                  </font>
@@ -69,7 +69,7 @@
                                     <Insets left="5.0" top="15.0" />
                                  </HBox.margin>
                               </Text>
-                              <TextField fx:id="subject_field" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="150.0" text="subject">
+                              <TextField fx:id="subject_field" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="150.0">
                                  <HBox.margin>
                                     <Insets left="20.0" top="10.0" />
                                  </HBox.margin>
@@ -88,7 +88,7 @@
                                     <Insets left="5.0" top="15.0" />
                                  </HBox.margin>
                               </Text>
-                              <TextField fx:id="rate_field" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="150.0" text="rate">
+                              <TextField fx:id="rate_field" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="150.0">
                                  <HBox.margin>
                                     <Insets left="20.0" top="10.0" />
                                  </HBox.margin>
@@ -117,7 +117,7 @@
                   </VBox>
                </children>
             </AnchorPane>
-            <TableView fx:id="myTable" onMouseClicked="#getSelected" prefHeight="350.0" prefWidth="565.0">
+            <TableView fx:id="myTable" onMouseClicked="#rowSelected" prefHeight="350.0" prefWidth="565.0">
               <columns>
                 <TableColumn fx:id="id_col" prefWidth="53.0" text="id" />
                 <TableColumn fx:id="index_number_col" prefWidth="104.0" text="index_number" />

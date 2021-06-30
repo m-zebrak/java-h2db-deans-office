@@ -1,45 +1,20 @@
 package org.example;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+@AllArgsConstructor
 public class ASubject {
-    private int id, index_number, rate;
+    private int id;
+    private int index_number;
     private String subject;
+    private int rate;
 
-    public ASubject(int id, int index_number, String subject, int rate) {
-        this.id = id;
-        this.index_number = index_number;
-        this.rate = rate;
-        this.subject = subject;
-    }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getIndex_number() {
-        return index_number;
-    }
-
-    public void setIndex_number(int index_number) {
-        this.index_number = index_number;
-    }
-
-    public int getRate() {
-        return rate;
-    }
-
-    public void setRate(int rate) {
-        this.rate = rate;
-    }
-
-    public String getSubject() {
-        return subject;
-    }
-
-    public void setSubject(String subject) {
-        this.subject = subject;
+    public ASubject(String[] arr) {
+        this(Integer.parseInt(arr[0]), Integer.parseInt(arr[1]), arr[2], Integer.parseInt(arr[3]));
     }
 }

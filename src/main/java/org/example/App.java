@@ -16,7 +16,7 @@ public class App extends Application {
         scene = new Scene(loadFXML("students"));
 
         stage.setScene(scene);
-        stage.setTitle("BAZA DANYCH DZIEKANAT");
+        stage.setTitle("DEAN'S OFFICE DATABASE\n");
         stage.setResizable(false);
         stage.show();
     }
@@ -33,9 +33,9 @@ public class App extends Application {
 
 
     public static void main(String[] args) {
+        DbConnector.createTables();
         launch();
         QueryExecutor.closeStatement();
         DbConnector.close();
     }
-
 }
