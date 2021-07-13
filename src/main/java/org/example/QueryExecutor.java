@@ -9,42 +9,63 @@ public class QueryExecutor {
     private static Connection myConn = DbConnector.getConnection();
     private static Statement myStmt = null;
 
-    public static ResultSet executeQuery(String selectQuery) {
+    public static void createStatement() {
+        /**
+         * A function that creates a statement
+         */
         try {
             myStmt = myConn.createStatement();
-
-            System.out.println("--SELECT QUERY COMPLETED SUCCESSFULLY!--");
-            System.out.println(selectQuery);
-            System.out.println();
-
-            return myStmt.executeQuery(selectQuery);
-        } catch (SQLException exception) {
-            System.out.println(exception.getMessage());
-            return null;
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
     }
 
+    public static ResultSet executeSelect(String selectQuery) {
+        /**
+         * A function that executes SELECT queries
+         * return: ResultSet of passed SELECT query if successful
+         */
+        ResultSet resultSet = null;
+        try {
+            createStatement();
+            resultSet = myStmt.executeQuery(selectQuery);
+
+            System.out.println("--SELECT QUERY COMPLETED SUCCESSFULLY!--");
+            System.out.println(selectQuery + "\n");
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return resultSet;
+    }
 
     public static void executeUpdate(String updateQuery) {
+        /**
+         * A function that executes  UPDATE or DELETE queries
+         */
         try {
-            myStmt = myConn.createStatement();
+            createStatement();
             myStmt.executeUpdate(updateQuery);
 
             System.out.println("--UPDATE QUERY COMPLETED SUCCESSFULLY!--");
-            System.out.println(updateQuery);
-            System.out.println();
-        } catch (SQLException exception) {
-            System.out.println(exception.getMessage());
+            System.out.println(updateQuery + "\n");
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
         }
     }
 
 
     public static void closeStatement() {
+        /**
+         * A function that closes the statement
+         */
         try {
             myStmt.close();
             System.out.println("--STATEMENT CLOSED--");
-        } catch (SQLException exception) {
-            System.out.println(exception.getMessage());
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
     }
 }

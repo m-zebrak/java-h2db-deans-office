@@ -11,7 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.IOException;
 
 public class SubjectsController extends Controller {
-    ObservableList<ASubject> subjects = FXCollections.observableArrayList();
+    private ObservableList<ASubject> subjects = FXCollections.observableArrayList();
 
     @FXML
     private TextField subject_field;
@@ -22,15 +22,19 @@ public class SubjectsController extends Controller {
     @FXML
     private TableColumn<ASubject, Integer> rate_col;
 
-
     private void createSubjectsList() {
+        /**
+         * A function that creates a list of all subjects from passed table name
+         */
         subjects.clear();
         getListOfAllObjectsValues("subjects")
                 .forEach(arr -> subjects.add(new ASubject((String[]) arr)));
     }
 
-
-    public void fillTable() {
+    private void fillTable() {
+        /**
+         * A function that fills up the entire table with values stored in the Student class
+         */
         id_col.setCellValueFactory(new PropertyValueFactory("id"));
         index_number_col.setCellValueFactory(new PropertyValueFactory("index_number"));
         subject_col.setCellValueFactory(new PropertyValueFactory("subject"));
@@ -39,8 +43,11 @@ public class SubjectsController extends Controller {
         myTable.setItems(subjects);
     }
 
-
-    public boolean validateFields(String index_number, String subject, String rate) {
+    private boolean validateFields(String index_number, String subject, String rate) {
+        /**
+         * A function that validates if all field was completed correctly
+         * return: true if validation passed or else if not
+         */
         boolean passed = true;
 
         if (!StringUtils.isNumeric(index_number) || Integer.parseInt(index_number) < 1) {
@@ -61,8 +68,11 @@ public class SubjectsController extends Controller {
         return passed;
     }
 
-
     private boolean fieldsUnedited(String index_number, String subject, String rate) {
+        /**
+         * A function that checks if there were no changes in any of the field
+         * return true if all fields are the same as before or false if fields were edited
+         */
         if (index_number.equals(index_number_col.getCellData(index).toString()) && subject.equals(subject_col.getCellData(index)) && rate.equals(rate_col.getCellData(index).toString())) {
             return true;
         }
@@ -70,8 +80,10 @@ public class SubjectsController extends Controller {
         return false;
     }
 
-
     public void rowSelected() {
+        /**
+         *  A function that gets all the data from the selected row and inserts them in all the fields
+         */
         //sets index of selected row
         setIndex();
         //if someone fills up the fields on the left side and then click back on the same row - return and don't update the form
@@ -82,36 +94,34 @@ public class SubjectsController extends Controller {
         rate_field.setText(rate_col.getCellData(index).toString());
     }
 
-
     public void initialize() {
         createSubjectsList();
         fillTable();
     }
 
-
-    @FXML
     public void refreshButton() {
         initialize();
     }
 
-
-    @FXML
     public void studentsButton() throws IOException {
         App.setRoot("students");
     }
 
-
-    /**
-     * This function is called when the add button is pressed. Retrieves data from the fields on the left,
-     * then validates them and sends a query if validations have been passed.
-     */
     public void addButton() {
-        //TODO: check czy wprowadzony index jest w studentach
+        /**
+         * This function is called when the add button is pressed. Retrieves data from the fields on the left,
+         * then validates them and sends a query if validations have been passed.
+         */
         String index_number = index_number_field.getText();
         String subject = subject_field.getText();
         String rate = rate_field.getText();
 
         if (!validateFields(index_number, subject, rate)) return;
+        if(!isIndexNumberPresent(index_number)) {
+            System.out.println("NO STUDENT WITH A GIVEN INDEX NUMBER");
+            index_number_field.setText("Index not found!");
+            return;
+        }
 
         String sql = String.format("INSERT INTO subjects VALUES (null, %s, \'%s\', %s);", index_number, subject,
                 rate);
@@ -119,14 +129,12 @@ public class SubjectsController extends Controller {
         initialize();
     }
 
-
-    /**
-     * This function is called when the edit button is pressed. Retrieves data from the fields on the left only if
-     * a row is selected, then validates them and sends a query if validations have been passed.
-     */
     public void editButton() {
-        //TODO: check czy wprowadzony index jest w studentach
-        //if no one row is selected
+        /**
+         * This function is called when the edit button is pressed. Retrieves data from the fields on the left only if
+         * a row is selected, then validates them and sends a query if validations have been passed.
+         */
+        // if no one row is selected
         if (!setIndex()) return;
 
         String index_number = index_number_field.getText();
@@ -134,21 +142,25 @@ public class SubjectsController extends Controller {
         String subject = subject_field.getText();
         String rate = rate_field.getText();
 
+        if (fieldsUnedited(index_number, subject, rate)) return;
         if (!validateFields(index_number, subject, rate)) return;
+        if(!isIndexNumberPresent(index_number)) {
+            System.out.println("NO STUDENT WITH A GIVEN INDEX NUMBER");
+            index_number_field.setText("Index not found!");
+            return;
+        }
 
         String sql = String.format("UPDATE subjects SET index_number=%s, subject=\'%s\', rate=%s WHERE id=%s;",
                 index_number, subject, rate, id);
-        System.out.println(sql);
         QueryExecutor.executeUpdate(sql);
         initialize();
     }
 
-
-    /**
-     * This function is called when the remove button is pressed. Retrieves data from the fields on the left only if
-     * a row is selected, then sends a delete query.
-     */
     public void removeButton() {
+        /**
+         * This function is called when the remove button is pressed. Retrieves data from the fields on the left only if
+         * a row is selected, then sends a delete query.
+         */
         if (!setIndex()) return;
 
         String id = id_col.getCellData(index).toString();
