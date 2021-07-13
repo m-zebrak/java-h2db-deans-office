@@ -22,6 +22,12 @@ public class StudentsController extends Controller {
     @FXML
     private TableColumn<Student, String> surname_col;
 
+    @Override
+    protected void clearFields() {
+        super.clearFields();
+        name_field.setText("");
+        surname_field.setText("");
+    }
 
     private void createStudentsList() {
         /**
@@ -79,7 +85,6 @@ public class StudentsController extends Controller {
 
         return false;
     }
-
 
     public void rowSelected() {
         /**
@@ -173,6 +178,7 @@ public class StudentsController extends Controller {
 
         QueryExecutor.executeUpdate(sql1);
         QueryExecutor.executeUpdate(sql2);
+        clearFields();
         initialize();
     }
 }

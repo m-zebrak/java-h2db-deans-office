@@ -8,11 +8,11 @@ There are some SELECT, INSERT, UPDATE, and DELETE queries. You can add a row, ed
 form at the left side or delete a selected row.
 
 # This is how it looks:
-### 1. application started
+### 1. application started and 4th student selected
   ![](screenshoots/app_started.png)
 
 
-### 2. student edited
+### 2. 4th student edited (Julie -> Hannah)
   ![](screenshoots/student_edited.png)
 
 ### 3. subject selected

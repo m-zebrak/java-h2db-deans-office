@@ -22,6 +22,13 @@ public class SubjectsController extends Controller {
     @FXML
     private TableColumn<ASubject, Integer> rate_col;
 
+    @Override
+    protected void clearFields() {
+        super.clearFields();
+        subject_field.setText("");
+        rate_field.setText("");
+    }
+
     private void createSubjectsList() {
         /**
          * A function that creates a list of all subjects from passed table name
@@ -167,6 +174,7 @@ public class SubjectsController extends Controller {
 
         String sql = String.format("DELETE FROM subjects WHERE id=%s", id);
         QueryExecutor.executeUpdate(sql);
+        clearFields();
         initialize();
     }
 }

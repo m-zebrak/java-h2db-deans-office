@@ -12,9 +12,13 @@ import java.util.ArrayList;
 
 import static org.example.StudentsController.students;
 
-public class Controller {
+public abstract class Controller {
     protected int index;
     protected int id = -1;
+
+    protected void clearFields(){
+        index_number_field.setText("");
+    }
 
     @FXML
     protected TextField index_number_field;
