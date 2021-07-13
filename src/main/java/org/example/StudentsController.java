@@ -106,7 +106,12 @@ public class StudentsController extends Controller {
         fillTable();
     }
 
+    @Override
     public void refreshButton() {
+        /**
+         * Clears all fields of the form and calls initialize()
+         */
+        super.refreshButton();
         initialize();
     }
 
@@ -133,7 +138,7 @@ public class StudentsController extends Controller {
         String sql = String.format("INSERT INTO students VALUES (null, %s, \'%s\', \'%s\');", index_number, name, surname);
 
         QueryExecutor.executeUpdate(sql);
-        initialize();
+        refreshButton();
     }
 
     public void editButton() {
@@ -161,7 +166,7 @@ public class StudentsController extends Controller {
                 index_number, name, surname, index_number_old);
 
         QueryExecutor.executeUpdate(sql);
-        initialize();
+        refreshButton();
     }
 
     public void removeButton() {
@@ -178,7 +183,6 @@ public class StudentsController extends Controller {
 
         QueryExecutor.executeUpdate(sql1);
         QueryExecutor.executeUpdate(sql2);
-        clearFields();
-        initialize();
+        refreshButton();
     }
 }

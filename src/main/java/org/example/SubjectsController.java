@@ -106,7 +106,12 @@ public class SubjectsController extends Controller {
         fillTable();
     }
 
+    @Override
     public void refreshButton() {
+        /**
+         * Clears all fields of the form and calls initialize()
+         */
+        super.refreshButton();
         initialize();
     }
 
@@ -160,7 +165,7 @@ public class SubjectsController extends Controller {
         String sql = String.format("UPDATE subjects SET index_number=%s, subject=\'%s\', rate=%s WHERE id=%s;",
                 index_number, subject, rate, id);
         QueryExecutor.executeUpdate(sql);
-        initialize();
+        refreshButton();
     }
 
     public void removeButton() {
@@ -174,7 +179,6 @@ public class SubjectsController extends Controller {
 
         String sql = String.format("DELETE FROM subjects WHERE id=%s", id);
         QueryExecutor.executeUpdate(sql);
-        clearFields();
-        initialize();
+        refreshButton();
     }
 }
