@@ -1,4 +1,4 @@
-#java-h2db-deans-office
+# java-h2db-deans-office
 
 My practice with h2 database and JavaFX to learn more about these technologies.
 
