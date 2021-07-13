@@ -15,13 +15,13 @@ form at the left side or delete a selected row.
 ### 2. 4th student edited (Julie -> Hannah)
   ![](screenshoots/student_edited.png)
 
-### 3. subject selected
+### 3. subject "Physics" selected
   ![](screenshoots/subject_selected.png)
 
-### 4. subject removed
+### 4. subject "Physics" removed
 ![](screenshoots/subject_removed_new.png)
 
-### 5. english with rating 5 has been added and attempted to add a subject by the index that no one student has
+### 5. subject "English" with rating 5 has been added and attempted to add a subject by the index that no one student has
 (index_number in subjects is a FOREIGN key that references index_number in students, so in the students table there 
 must 
 be a student with a given index_number)
