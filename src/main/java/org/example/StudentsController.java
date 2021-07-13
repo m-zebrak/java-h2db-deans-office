@@ -146,7 +146,7 @@ public class StudentsController extends Controller {
 
         if (fieldsUnedited(index_number, name, surname)) return;
         if (!validateFields(index_number, name, surname)) return;
-        if(isIndexNumberPresent(index_number)) {
+        if(isIndexNumberPresent(index_number) && !index_number.equals(index_number_old)) {
             System.out.println("STUDENT WITH A GIVEN INDEX NUMBER ALREADY OCCURS");
             index_number_field.setText("Index duplicate!");
             return;
