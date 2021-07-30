@@ -2,7 +2,7 @@
 
 My practice with h2 database and JavaFX to learn more about these technologies.
 
-It is a simple window application that allows to query a database using a form.
+It is a simple window application that allows you to submit database queries using a form.
 
 There are some SELECT, INSERT, UPDATE, and DELETE queries. You can add a row, edit it by editing the values in the
 form on the left side or delete a selected row.
