@@ -7,14 +7,13 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class ASubject {
+public class Subject {
     private int id;
     private int index_number;
     private String subject;
     private int rate;
 
-
-    public ASubject(String[] arr) {
+    public Subject(String[] arr) {
         this(Integer.parseInt(arr[0]), Integer.parseInt(arr[1]), arr[2], Integer.parseInt(arr[3]));
     }
 }

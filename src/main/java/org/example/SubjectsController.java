@@ -11,16 +11,16 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.IOException;
 
 public class SubjectsController extends Controller {
-    private ObservableList<ASubject> subjects = FXCollections.observableArrayList();
+    private ObservableList<Subject> subjects = FXCollections.observableArrayList();
 
     @FXML
     private TextField subject_field;
     @FXML
     private TextField rate_field;
     @FXML
-    private TableColumn<ASubject, String> subject_col;
+    private TableColumn<Subject, String> subject_col;
     @FXML
-    private TableColumn<ASubject, Integer> rate_col;
+    private TableColumn<Subject, Integer> rate_col;
 
     @Override
     protected void clearFields() {
@@ -35,7 +35,7 @@ public class SubjectsController extends Controller {
          */
         subjects.clear();
         getListOfAllObjectsValues("subjects")
-                .forEach(arr -> subjects.add(new ASubject((String[]) arr)));
+                .forEach(arr -> subjects.add(new Subject((String[]) arr)));
     }
 
     private void fillTable() {
